@@ -1,0 +1,40 @@
+varnishtest "VCL_SUB check_sub flag"
+
+server s1 {
+    rxreq
+    txresp
+} -start
+
+varnish v1 -vcl+backend {
+	import debug;
+
+	sub foo {
+		set bereq.http.it = "works";
+	}
+
+	sub vcl_recv {
+		debug.call(foo);
+	}
+
+} -start
+
+client c1 {
+	txreq -url "/foo"
+	rxresp
+	expect resp.status == 503
+} -run
+
+
+varnish v2 -arg "-p vcc_check_sub=on" -errvcl {Cannot be set from subroutine 'vcl_recv'} {
+	import debug;
+
+	backend dummy None;
+
+	sub foo {
+		set bereq.http.it = "works";
+	}
+
+	sub vcl_recv {
+		debug.call(foo);
+	}
+}

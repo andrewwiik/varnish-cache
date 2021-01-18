@@ -1577,6 +1577,13 @@ PARAM_VCC(
 )
 
 PARAM_VCC(
+	/* name */	vcc_check_sub,
+	/* def */	"off",
+	/* descr */
+	"Use Dynamic Subs in VCL"
+)
+
+PARAM_VCC(
 	/* name */	vcc_acl_pedantic,
 	/* def */	"off",
 	/* descr */
